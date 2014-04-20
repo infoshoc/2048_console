@@ -160,6 +160,7 @@ void play(){
 
 	memset ( field, 0, sizeof ( short ) * N * N );
 
+	put_random();
 	while ( ( result = get_game_result() ) == CONTINUE ) {
 		put_random();
 		print();
