@@ -68,7 +68,7 @@ void magnet( const int mult_i, const int mult_j, const int d_i, const int d_j ){
 			} while ( check_coord ( new_i, new_j ) && field[new_i][new_j] == 0 );
 
 			if ( check_coord ( new_i, new_j ) && field[i][j] == field[new_i][new_j] && !merged[new_i][new_j] ) {
-				field[new_i][new_j] *= field[i][j];
+				field[new_i][new_j] += field[i][j];
 				score += field[new_i][new_j];
 				field[i][j] = 0;
 				merged[new_i][new_j] = true;
