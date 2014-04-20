@@ -12,6 +12,7 @@ const short FINISH_TILE = 2048;
 
 long long score;
 short field[N][N];
+bool previous_turn;
 
 inline bool check_coord ( int i, int j ) { return i >= 0 && i < N && j >= 0 && j < N; }
 
@@ -68,6 +69,7 @@ void magnet( const int mult_i, const int mult_j, const int d_i, const int d_j ){
 			} while ( check_coord ( new_i, new_j ) && field[new_i][new_j] == 0 );
 
 			if ( check_coord ( new_i, new_j ) && field[i][j] == field[new_i][new_j] && !merged[new_i][new_j] ) {
+				previous_turn = true;
 				field[new_i][new_j] += field[i][j];
 				score += field[new_i][new_j];
 				field[i][j] = 0;
@@ -77,9 +79,11 @@ void magnet( const int mult_i, const int mult_j, const int d_i, const int d_j ){
 			new_i -= d_i;
 			new_j -= d_j;
 
-			short tile = field[i][j];
-			field[i][j] = 0;
-			field[new_i][new_j] = tile;
+			if ( i != new_i || j != new_j ) {
+				previous_turn = true;
+				field[new_i][new_j] = field[i][j];
+				field[i][j] = 0;	
+			}
 		}
 	}
 }
@@ -159,10 +163,14 @@ void play(){
 	static game_result result;
 
 	memset ( field, 0, sizeof ( short ) * N * N );
-
+	
+	put_random();
 	put_random();
 	while ( ( result = get_game_result() ) == CONTINUE ) {
-		put_random();
+		if ( previous_turn ) {
+			put_random();
+			previous_turn = false;
+		}
 		print();
 		switch ( read_command() ) {
 			case LEFT:
